@@ -24,7 +24,6 @@ using namespace std;
 
 class Date {
 public:
-	int year, month, day;
 	time_t now;
 	struct tm tm;
 	Date(int year, int month, int day);
@@ -35,13 +34,12 @@ public:
 	int getYear();
 	int getMonth();
 	int getDay();
+
+private:
+	int year, month, day;
+
 };
 
-Date::Date(int y, int m, int d) { //정수 매개변수를 갖는 생성자
-	year = y; month = m; day = d;
-	now = time(0);
-	localtime_s(&tm, &now);
-}
 
 Date::Date(string date) { // 문자열 매개변수를 갖는 생성자
 	year = stoi(date.substr(0, 4));
@@ -102,6 +100,11 @@ int main() {
 	cout << "환영합니다! 학과명, 학번, 이름, 생년월일(yyyy/mm/dd)을 입력하세요" << endl;
 
 	cin >> department >> studentNum >> name >> birth;
+
+	if (department.empty() || studentNum.empty() || name.empty() || birth.empty() || birth.length() != 10) { // 빈 입력이나 서식에 맞지 않을 시
+		cout << "입력이 잘못되었습니다. 프로그램을 종료합니다." << endl;
+		return 0;
+	}
 
 	department.pop_back(); // 마지막 콤마를 빼준다
 	studentNum.pop_back();
