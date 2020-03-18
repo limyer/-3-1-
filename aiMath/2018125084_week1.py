@@ -124,7 +124,7 @@ def vec_size(v):
     # return np.linalg.norm(v)
 
 print("\n\n4: ",end='')
-print(vec_size(c))
+print(round(vec_size(c),2))
 
 
 # 5. 아래와 같이 3-d space에서 정의된 coordinate a, b의 basis vector들과 coordinate a에서 (6, 4, 2)의 값을
@@ -183,7 +183,7 @@ a_b_vectorx = np.sum(a_vector*bx)/np.linalg.norm(bx)**2
 a_b_vectory = np.sum(a_vector*by)/np.linalg.norm(by)**2
 a_b_vectorz = np.sum(a_vector*bz)/np.linalg.norm(bz)**2
 print("5-d: ", end='')
-print(np.array([a_b_vectorx, a_b_vectory, a_b_vectorz]))
+print(np.array([round(a_b_vectorx,2), round(a_b_vectory,2), round(a_b_vectorz,2)]))
 
 # 5-e
 a_vector = np.array([2, 2, 2])
@@ -191,7 +191,7 @@ a_b_vectorx = np.sum(a_vector*bx)/np.linalg.norm(bx)**2
 a_b_vectory = np.sum(a_vector*by)/np.linalg.norm(by)**2
 a_b_vectorz = np.sum(a_vector*bz)/np.linalg.norm(bz)**2
 print("5-e: ", end='')
-print(np.array([a_b_vectorx, a_b_vectory, a_b_vectorz]))
+print(np.array([round(a_b_vectorx,2), round(a_b_vectory,2), round(a_b_vectorz,2)]))
 
 # 5-f
 b_vector = np.array([1, 2, 3])
