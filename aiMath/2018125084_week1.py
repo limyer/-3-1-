@@ -199,7 +199,7 @@ b_a_vectorx = b_vector[0] * bx
 b_a_vectory = b_vector[1] * by
 b_a_vectorz = b_vector[2] * bz
 print("5-f: ", end='')
-print(np.array(b_a_vectorx+b_a_vectory+b_a_vectorz))
+print(np.array(b_a_vectorx + b_a_vectory + b_a_vectorz))
 
 # 5-g
 b_vector = np.array([4, 1, 7])
@@ -207,7 +207,7 @@ b_a_vectorx = b_vector[0] * bx
 b_a_vectory = b_vector[1] * by
 b_a_vectorz = b_vector[2] * bz
 print("5-g: ", end='')
-print(np.array(b_a_vectorx+b_a_vectory+b_a_vectorz))
+print(np.array(b_a_vectorx + b_a_vectory + b_a_vectorz))
 
 # 5-h
 b_vector = np.array([0, -1, 2])
@@ -215,4 +215,4 @@ b_a_vectorx = b_vector[0] * bx
 b_a_vectory = b_vector[1] * by
 b_a_vectorz = b_vector[2] * bz
 print("5-h: ", end='')
-print(np.array(b_a_vectorx+b_a_vectory+b_a_vectorz))
+print(np.array(b_a_vectorx + b_a_vectory + b_a_vectorz))
