@@ -18,14 +18,15 @@
 
 #include <iostream>
 #include <string>
-#include <time.h>
+#include <ctime>
+#pragma warning(disable : 4996)
 
 using namespace std;
 
 class Date {
 public:
 	time_t now;
-	struct tm tm;
+	struct tm *tm;
 	Date(int year, int month, int day);
 	Date(string date);
 	void show();
@@ -46,7 +47,7 @@ Date::Date(string date) { // 문자열 매개변수를 갖는 생성자
 	month = stoi(date.substr(5, 8));
 	day = stoi(date.substr(8, 11));
 	now = time(0);
-	localtime_s(&tm, &now);
+	tm = localtime(&now);
 }
 
 void Date::show() { // 생년월일 출력
@@ -54,22 +55,22 @@ void Date::show() { // 생년월일 출력
 }
 
 void Date::showCurrentTime() { // 현재 시간 출력
-	cout << tm.tm_year + 1900 << "년 " << tm.tm_mon + 1 << "월 " << tm.tm_mday << "일";
+	cout << tm->tm_year + 1900 << "년 " << tm->tm_mon + 1 << "월 " << tm->tm_mday << "일";
 }
 
 int Date::calculateAge() { // 만나이 계산
 	int age;
 
-	age = tm.tm_year + 1900 - year; // 먼저 올해에서 생년을 빼고 시작
-	if (month - (tm.tm_mon + 1) < 0) { // 생월이 지났을 경우
+	age = tm->tm_year + 1900 - year; // 먼저 올해에서 생년을 빼고 시작
+	if (month - (tm->tm_mon + 1) < 0) { // 생월이 지났을 경우
 		return age;
 	}
-	else if (month - (tm.tm_mon + 1) > 0) { // 생월이 지나지 않았을 경우
+	else if (month - (tm->tm_mon + 1) > 0) { // 생월이 지나지 않았을 경우
 		return age - 1;
 	}
 	else // 생월과 현재 월이 같을 경우
 	{
-		if (day - (tm.tm_mday) < 0) // 날짜가 지났을 경우
+		if (day - (tm->tm_mday) < 0) // 날짜가 지났을 경우
 			return age;
 		else // 날짜가 지나지 않았을 경우
 			return age - 1;
