@@ -79,12 +79,13 @@ print(np.matmul(T,v1.transpose()[1]))
 print(np.matmul(T,v1.transpose()[2]))
 
 # Problem 3-c
-lambdaArr = np.array(([w1[0],0,0], [0,w1[1],0], [0,0,w1[2]]))
 print("3-c")
-lambdaX = np.matmul(lambdaArr,v1)
-print(lambdaX[0])
-print(lambdaX[1])
-print(lambdaX[2])
+lambdaX1 = w1[0] * v1.transpose()[0]
+lambdaX2 = w1[1] * v1.transpose()[1]
+lambdaX3 = w1[2] * v1.transpose()[2]
+print(lambdaX1)
+print(lambdaX2)
+print(lambdaX3)
 
 # Problem 4-a
 L = np.array(([0,1/2,0,0], [1/3,0,0,1/2], [1/3,0,0,1/2], [1/3, 1/2, 1, 0]))
@@ -99,7 +100,7 @@ sumV = np.sum(absV)
 normV = absV/sumV
 
 print("4-b")
-print(100* np.real(normV))
+print(100 * np.real(normV))
 
 # Problem 4-c
 def PageRank(linkMatrix):

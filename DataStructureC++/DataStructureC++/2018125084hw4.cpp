@@ -116,7 +116,7 @@ private:
 
 
 istream& operator>>(istream& is, Polynomial& p) {
-	// 다항식을 입력 받는 연산자
+	// 과제 1번 : 다항식을 입력 받는 연산자
 
 	while (true) {
 		try {
@@ -170,7 +170,7 @@ istream& operator>>(istream& is, Polynomial& p) {
 }
 
 ostream& operator<<(ostream& os, Polynomial& p) {
-	// 다항식을 출력하기 위한 출력 연산자
+	// 과제 2번 : 다항식을 출력하기 위한 출력 연산자
 	// 출력할 값의 차수가 2 이상의 수일 때, 1일 때, 없을 때 세가지 경우를 고려하여 출력한다
 	// 그 안에서 값이 맨 처음인지, 계수가 1인지 확인한다.
 
@@ -227,6 +227,7 @@ ostream& operator<<(ostream& os, Polynomial& p) {
 
 
 Polynomial operator+(Polynomial& a, Polynomial& b) {
+	// 과제 3번 : 다항식을 더하는 연산자
 	Polynomial C;
 	int aPos = 0, bPos = 0;
 
@@ -259,6 +260,7 @@ Polynomial operator+(Polynomial& a, Polynomial& b) {
 
 
 Polynomial operator*(Polynomial& a, Polynomial& b) {
+	// 과제 5번 : 단항식의 곱셈
 	Polynomial c, d;
 
 	for (int i = 0; i < b.terms; i++) {
@@ -285,6 +287,7 @@ void Polynomial::newTerm(const float theCoeff, const int theExp) {
 }
 
 Polynomial Polynomial::sMultPoly(float c, float e) {
+	// 과제 4번 : 다항식의 단항 곱셈
 	Polynomial C;
 
 	for (int i = 0; i < terms; i++) {
@@ -295,6 +298,7 @@ Polynomial Polynomial::sMultPoly(float c, float e) {
 }
 
 float Polynomial::evalPoly(float c) {
+	// 과제 6번 : 다항식의 값 계산
 	float result = 0, term = 0;
 	for (int i = 0; i < terms; i++) {
 		term = termArray[i].coef * pow(c, termArray[i].exp);
