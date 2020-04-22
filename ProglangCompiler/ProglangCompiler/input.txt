@@ -1,0 +1,74 @@
+	#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
+
+
+#define KEYWORD_COUNT 10
+#define BUFFLEN 100000
+#define TOKEN_SIZE 100000
+#define MAX_TOKEN_LEN 1000
+	
+	char symbol;
+	if (fp == NULL) {
+		puts("Cannot open input file");
+		exit(1);
+	}
+	else {
+		int j = 0;
+		while 
+		(!feof(fp)) {
+			symbol = 
+			fgetc(fp);
+			input[j++] = 
+			symbol;
+		}
+		input[j++] 
+		=
+		EOF;
+		;		
+		fclose(fp);
+	}
+				if (input[c + 1] 
+				== '/') {
+				//토큰 타입 설정
+				if (!tokenTypeSet) {
+					tokenTypeSet = 1;
+				}
+				do {
+					token;
+				} 
+				while 
+				(input[c++ + 1] != '\n');
+				c--;
+				token = '\0';
+				break;
+			}
+					if (input[c] == '\n') {
+			token[current_token] = '\0';
+			line++;
+			continue;
+		}
+		
+		tokenTypeSet = 0;
+		in = 0;
+
+		next_token(input);
+
+		token[current_token] = line;
+		current_token;
+
+				// Id로 들어온 것 중에 키워드 확인
+		if (token[i] == ID) 
+		{
+			for (int j = 0; j < KEYWORD_COUNT; j++)
+			{
+				if (strcmp(token[i]->t, keywords[j])) 
+				{
+					token[i] = keyword;
+					break;
+				}
+			}
+		}
