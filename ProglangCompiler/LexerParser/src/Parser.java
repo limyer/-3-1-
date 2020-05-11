@@ -1,19 +1,30 @@
 import java.util.*;
 
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.border.*;
+import javax.swing.tree.*;
+
+
+
+
 public class Parser {
-    // Recursive descent parser that inputs a C++Lite program and
+    // Recursive descent parser that inputs a C++Lite program and 
     // generates its abstract syntax.  Each method corresponds to
     // a concrete syntax grammar rule, which appears as a comment
     // at the beginning of the method.
-
+  
     Token token;          // current token from the input stream
     Lexer lexer;
-
+  
     public Parser(Lexer ts) { // Open the C++Lite source program
         lexer = ts;                          // as a token stream, and
         token = lexer.next();            // retrieve its first Token
     }
-
+  
     private String match (TokenType t) { // * return the string of a token if it matches with t *
         String value = token.value();
         if (token.type().equals(t))
@@ -22,20 +33,19 @@ public class Parser {
             error(t);
         return value;
     }
-
+  
     private void error(TokenType tok) {
-        System.err.println("Syntax error: expecting: " + tok
+        System.err.println("Syntax error: expecting: " + tok 
                            + "; saw: " + token);
         System.exit(1);
     }
-
+  
     private void error(String tok) {
-        System.err.println("Syntax error: expecting: " + tok
+        System.err.println("Syntax error: expecting: " + tok 
                            + "; saw: " + token);
         System.exit(1);
     }
-
-    // student exercise
+  
     public Program program() {
         // Program --> void main ( ) '{' Declarations Statements '}'
         TokenType[ ] header = {TokenType.Int, TokenType.Main,
@@ -43,31 +53,32 @@ public class Parser {
         for (int i=0; i<header.length; i++)   // bypass "int main ( )"
             match(header[i]);
         match(TokenType.LeftBrace);
+        // student exercise
         Declarations d = declarations();
         Block b = statements();
         match(TokenType.RightBrace);
-        return new Program(d, b);
+        return new Program(d, b);  // student exercise
     }
-
+  
     private Declarations declarations () {
         // Declarations --> { Declaration }
         Declarations ds = new Declarations();
-        // 선언한 변수가 하나도 없으면 while문을 그냥 통과하여 빈 ds를 반환함
-        while(isType()) {
+        while(isType()) { // 변수 선언 확인
         	declaration(ds);
         }
-        return ds;
+        return ds;  // student exercise
     }
-
+  
     private void declaration (Declarations ds) {
         // Declaration  --> Type Identifier { , Identifier } ;
-    	// clite에서는 선언과 동시에 할당 불가
+        // student exercise
         Declaration d;
         Variable v;
         Type t = type();
         v = new Variable(match(TokenType.Identifier));
         d = new Declaration(v, t);
         ds.add(d);
+        
         while (token.type().equals(TokenType.Comma)) {
         	token = lexer.next();
         	v = new Variable(match(TokenType.Identifier));
@@ -76,11 +87,11 @@ public class Parser {
         }
         match(TokenType.Semicolon);
     }
-
-    // 조건문만으로 이루어진 함수는 에러감지 요소가 없으므로 해당되는 케이스 확인 후 else로 에러처리
+  
     private Type type () {
-        // Type  -->  int | bool | float | char
-    	Type t = null;
+        // Type  -->  int | bool | float | char 
+        Type t = null;
+        // student exercise
         if (token.type().equals(TokenType.Int)) {
         	t = Type.INT;
         } else if (token.type().equals(TokenType.Bool)) {
@@ -93,14 +104,16 @@ public class Parser {
         	error(token.type());
         }
         token = lexer.next();
-        return t;
+        return t;          
     }
-
+  
     private Statement statement() {
         // Statement --> ; | Block | Assignment | IfStatement | WhileStatement
-        Statement s = null;
+        Statement s = new Skip();
+        // student exercise
         if (token.type().equals(TokenType.Semicolon)) {
         	s = new Skip();
+        	token = lexer.next();
         } else if (token.type().equals(TokenType.LeftBrace)) {
             match(TokenType.LeftBrace);
         	s = statements();
@@ -118,38 +131,41 @@ public class Parser {
     }
     
     private Block statements () {
-        // Block --> '{' Statements '}' // 무한대로 확장된다는 것이지, {} 부호가 포함되는게 아님.
+        // Block --> '{' Statements '}'
         Block b = new Block();
+        // student exercise
         while(isStatement()) {
         	b.members.add(statement());
         }
         return b;
     }
-
+  
     private Assignment assignment () {
         // Assignment --> Identifier = Expression ;
-    	Variable t = new Variable(match(TokenType.Identifier));
+    	Variable target = new Variable(match(TokenType.Identifier));
     	match(TokenType.Assign);
-    	Expression s = expression();
+    	Expression source = expression();
     	match(TokenType.Semicolon);
-        return new Assignment(t, s);
+        return new Assignment(target, source);  // student exercise
     }
-
+  
     private Conditional ifStatement () {
         // IfStatement --> if ( Expression ) Statement [ else Statement ]
-    	match(TokenType.If);
+       	match(TokenType.If);
         match(TokenType.LeftParen);
         Expression e = expression();
         match(TokenType.RightParen);
     	Statement s = statement();
-    	if(token.type().equals(TokenType.Else)) {
+    	if (token.type().equals(TokenType.Else)) {
+    		match(TokenType.Else);
     		Statement es = statement();
     		return new Conditional(e, s, es);
-    	} else {
+    	} 
+    	else {
     		return new Conditional(e, s);
     	}
     }
-
+  
     private Loop whileStatement () {
         // WhileStatement --> while ( Expression ) Statement
     	match(TokenType.While);
@@ -159,7 +175,7 @@ public class Parser {
     	Statement s = statement();
     	return new Loop(e, s);
     }
-    
+
     private Expression expression () {
         // Expression --> Conjunction { || Conjunction }
     	Expression e = conjunction();
@@ -168,10 +184,9 @@ public class Parser {
             Expression term2 = conjunction();
             e = new Binary(op, e, term2);
         }
-        return e; 
+        return e;  // student exercise
     }
-
-    // student exercise
+  
     private Expression conjunction () {
         // Conjunction --> Equality { && Equality }
     	Expression e = equality();
@@ -180,10 +195,9 @@ public class Parser {
             Expression term2 = equality();
             e = new Binary(op, e, term2);
         }
-        return e; 
+        return e; // student exercise
     }
-
-    // student exercise
+  
     private Expression equality () {
         // Equality --> Relation [ EquOp Relation ]
     	Expression rel = relation();
@@ -192,21 +206,20 @@ public class Parser {
             Expression rel2 = relation();
             rel = new Binary(op, rel, rel2);
     	}
-        return rel;
+        return rel;// student exercise
     }
 
-    // student exercise
     private Expression relation (){
-        // Relation --> Addition [ RelOp Addition ]
+        // Relation --> Addition [RelOp Addition] 
     	Expression a = addition();
     	if (isRelationalOp()) {
             Operator op = new Operator(match(token.type()));
             Expression a2 = addition();
             a = new Binary(op, a, a2);
     	}
-        return a;
+        return a; // student exercise
     }
-
+  
     private Expression addition () {
         // Addition --> Term { AddOp Term }
         Expression e = term();
@@ -217,7 +230,7 @@ public class Parser {
         }
         return e;
     }
-
+  
     private Expression term () {
         // Term --> Factor { MultiplyOp Factor }
         Expression e = factor();
@@ -228,9 +241,9 @@ public class Parser {
         }
         return e;
     }
-
+  
     private Expression factor() {
-        // Factor --> [ UnaryOp ] Primary
+        // Factor --> [ UnaryOp ] Primary 
         if (isUnaryOp()) {
             Operator op = new Operator(match(token.type()));
             Expression term = primary();
@@ -238,7 +251,7 @@ public class Parser {
         }
         else return primary();
     }
-
+  
     private Expression primary () {
         // Primary --> Identifier | Literal | ( Expression )
         //             | Type ( Expression )
@@ -249,7 +262,7 @@ public class Parser {
             e = literal();
         } else if (token.type().equals(TokenType.LeftParen)) {
             token = lexer.next();
-            e = expression();
+            e = expression();       
             match(TokenType.RightParen);
         } else if (isType( )) {
             Operator op = new Operator(match(token.type()));
@@ -260,85 +273,110 @@ public class Parser {
         } else error("Identifier | Literal | ( | Type");
         return e;
     }
+    
+    
 
-    private Value literal( ) { // match는 string을 반환하므로 변환한 값을 반환
+    private Value literal( ) {
     	Value v = null;
     	if (token.type().equals(TokenType.IntLiteral)) {
     		v = new IntValue(Integer.parseInt(match(TokenType.IntLiteral)));
-    	} else if (token.type().equals(TokenType.FloatLiteral)) {
+    	}
+    	else if (token.type().equals(TokenType.FloatLiteral)) {
     		v = new FloatValue(Float.parseFloat(match(TokenType.FloatLiteral)));
-    	} else if (token.type().equals(TokenType.CharLiteral)) {
-    		v = new CharValue(match(TokenType.CharLiteral).charAt(0));
-    	} else if (isBooleanLiteral( )) { 
+    	} 
+    	else if (token.type().equals(TokenType.CharLiteral)) {
+    	v = new CharValue(match(TokenType.CharLiteral).charAt(0));
+    	} 
+    	else if (isBooleanLiteral( )) { 
     		if (token.type().equals(TokenType.True)) {
     			match(TokenType.True);
-    		} else if (token.type().equals(TokenType.False)) {
+    		} 
+    		else if (token.type().equals(TokenType.False)) {
     			match(TokenType.False);
     		}
     		v = new BoolValue(Boolean.valueOf(token.value()));
     	} else {
     		error ("Literal Error");
     	}
-    	return v;
+    	return v;// student exercise
     }
+  
 
-    private boolean isStatement( ) { // 새로 만든 함수. Statement인지를 식별
-    	return (token.type().equals(TokenType.Semicolon) ||
-    			token.type().equals(TokenType.LeftBrace) ||
-    			token.type().equals(TokenType.If) ||
-    			token.type().equals(TokenType.While) ||
-    			token.type().equals(TokenType.Identifier));
-    }
-    
     private boolean isAddOp( ) {
         return token.type().equals(TokenType.Plus) ||
                token.type().equals(TokenType.Minus);
     }
-
+    
     private boolean isMultiplyOp( ) {
         return token.type().equals(TokenType.Multiply) ||
                token.type().equals(TokenType.Divide);
     }
-
+    
     private boolean isUnaryOp( ) {
         return token.type().equals(TokenType.Not) ||
                token.type().equals(TokenType.Minus);
     }
-
+    
     private boolean isEqualityOp( ) {
         return token.type().equals(TokenType.Equals) ||
             token.type().equals(TokenType.NotEqual);
     }
-
+    
     private boolean isRelationalOp( ) {
         return token.type().equals(TokenType.Less) ||
-               token.type().equals(TokenType.LessEqual) ||
+               token.type().equals(TokenType.LessEqual) || 
                token.type().equals(TokenType.Greater) ||
                token.type().equals(TokenType.GreaterEqual);
     }
-
+    
     private boolean isType( ) {
         return token.type().equals(TokenType.Int)
-            || token.type().equals(TokenType.Bool)
+            || token.type().equals(TokenType.Bool) 
             || token.type().equals(TokenType.Float)
             || token.type().equals(TokenType.Char);
     }
-
+    
     private boolean isLiteral( ) {
         return token.type().equals(TokenType.IntLiteral) ||
             isBooleanLiteral() ||
             token.type().equals(TokenType.FloatLiteral) ||
             token.type().equals(TokenType.CharLiteral);
     }
-
+    
     private boolean isBooleanLiteral( ) {
         return token.type().equals(TokenType.True) ||
             token.type().equals(TokenType.False);
     }
-
+    
+    private boolean isStatement( ) { // Statement인지 확인하는 함수
+    	return (token.type().equals(TokenType.Semicolon) ||
+    			token.type().equals(TokenType.If) ||
+    			token.type().equals(TokenType.While) ||
+    			token.type().equals(TokenType.LeftBrace) ||
+    			token.type().equals(TokenType.Identifier));
+    }
+    
     public static void main(String args[]) {
         Parser parser  = new Parser(new Lexer(args[0]));
         Program prog = parser.program();
-        prog.display();           // display abstract syntax tree
+        JTree tree;
+    	JFrame frame = new JFrame();
+        tree = new JTree(prog.makeRoot());
+    	tree.setVisibleRowCount(10);
+    	
+
+
+    	JScrollPane treeScroll = new JScrollPane(tree);
+    	frame.add(treeScroll);
+    	
+    	frame.setTitle("Abstract Syntax Tree");
+    	frame.setSize(400, 500);
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	
+		frame.setVisible(true);
+		
+        
+        
     } //main
+
 } // Parser
