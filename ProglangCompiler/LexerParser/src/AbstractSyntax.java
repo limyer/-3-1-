@@ -132,7 +132,7 @@ class Conditional extends Statement {
     Conditional (Expression t, Statement tp, Statement ep) {
         test = t; thenbranch = tp; elsebranch = ep;
     }
-    DefaultMutableTreeNode ifNode = new DefaultMutableTreeNode("If Statement : ");
+    DefaultMutableTreeNode ifNode = new DefaultMutableTreeNode("Conditional : ");
 	public DefaultMutableTreeNode makeNode() {
 		ifNode.add(test.makeNode());
 		ifNode.add(thenbranch.makeNode());
@@ -151,7 +151,7 @@ class Loop extends Statement {
     Loop (Expression t, Statement b) {
         test = t; body = b;
     }
-    DefaultMutableTreeNode whileNode = new DefaultMutableTreeNode("While Statement : ");
+    DefaultMutableTreeNode whileNode = new DefaultMutableTreeNode("Loop : ");
 	public DefaultMutableTreeNode makeNode() {
 		whileNode.add(test.makeNode());
 		whileNode.add(body.makeNode());
@@ -247,7 +247,7 @@ class IntValue extends Value {
     }
     
 	public DefaultMutableTreeNode makeNode() {
-		DefaultMutableTreeNode intNode = new DefaultMutableTreeNode("Int: " + value);
+		DefaultMutableTreeNode intNode = new DefaultMutableTreeNode("IntValue: " + value);
 		return intNode;
 	}
     
@@ -278,7 +278,7 @@ class BoolValue extends Value {
 
 	
 	public DefaultMutableTreeNode makeNode() {
-		DefaultMutableTreeNode boolNode = new DefaultMutableTreeNode("Bool: " + value);
+		DefaultMutableTreeNode boolNode = new DefaultMutableTreeNode("BoolValue: " + value);
 		return boolNode;
 	}
 
@@ -303,7 +303,7 @@ class CharValue extends Value {
 
     
 	public DefaultMutableTreeNode makeNode() {
-		DefaultMutableTreeNode charNode = new DefaultMutableTreeNode("Char: " + value);
+		DefaultMutableTreeNode charNode = new DefaultMutableTreeNode("CharValue: " + value);
 		return charNode;
 	}
 
@@ -327,7 +327,7 @@ class FloatValue extends Value {
     }
 
 	public DefaultMutableTreeNode makeNode() {
-		DefaultMutableTreeNode floatNode = new DefaultMutableTreeNode("Float: " + value);
+		DefaultMutableTreeNode floatNode = new DefaultMutableTreeNode("FloatValue: " + value);
 		return floatNode;
 	}
 
@@ -342,12 +342,9 @@ class Binary extends Expression {
         op = o; term1 = l; term2 = r;
     } // binary
     
-    
-	DefaultMutableTreeNode binaryNode = new DefaultMutableTreeNode("Binary: ");
-	
 	public DefaultMutableTreeNode makeNode() {
+		DefaultMutableTreeNode binaryNode = new DefaultMutableTreeNode("Binary: " + op);
 		binaryNode.add(term1.makeNode());
-		binaryNode.add(op.makeNode());
 		binaryNode.add(term2.makeNode());
 		return binaryNode;
 	}
@@ -362,11 +359,9 @@ class Unary extends Expression {
     Unary (Operator o, Expression e) {
         op = o; term = e;
     } // unary
-
-	DefaultMutableTreeNode UnaryNode = new DefaultMutableTreeNode("Unary: ");
 	
 	public DefaultMutableTreeNode makeNode() {
-		UnaryNode.add(op.makeNode());
+		DefaultMutableTreeNode UnaryNode = new DefaultMutableTreeNode("Unary: " + op);
 		UnaryNode.add(term.makeNode());
 		return UnaryNode;
 	}
@@ -517,11 +512,5 @@ class Operator {
     final static public Operator boolMap (String op) {
         return map (boolMap, op);
     }
-    
-
-	public DefaultMutableTreeNode makeNode() {
-		DefaultMutableTreeNode opNode = new DefaultMutableTreeNode("Operator: " + val);
-		return opNode;
-	}
 
 }
